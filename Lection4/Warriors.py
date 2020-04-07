@@ -31,4 +31,4 @@ while barbarian.health > 0 and knight.health > 0:
 
 winner = barbarian if barbarian.health > 0 else knight
 
-print(f'{winner.name} вышел победителем из этой битвы с остатком здоровья в {winner.health} очков!')
+print(f'{winner.name} вышел победителем из этой битвы с остатком здоровья в {winner.health} очков!!!')
