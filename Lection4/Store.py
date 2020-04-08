@@ -4,35 +4,89 @@ class Product:
         self.price = price
 
 
-class Store(Product):
+class Store:
     products = {}
+    title = None
 
-    def add_product(self, number_of_products=1):
-        Store.products[self.name] = Store.products.get(self.name, 0) + number_of_products
+    @staticmethod
+    def _add_product(product, number_of_products=1):
+        Store.products[product.name] = Store.products.get(product.name, [0, 0])
+        Store.products[product.name][0] = product.price
+        Store.products[product.name][1] += number_of_products
 
-    def show_case(self=None):
-        if self is None:
-            for x, y in Store.products.items():
-                print(f'Количество товара {x}: {y}, суммарная стоимость: {globals().get(x).price * y}')
-        elif self.name in Store.products:
-            print(f'Количество товара {self.name}: {Store.products.get(self.name)}, '
-                  f'суммарная стоимость: {self.price * Store.products.get(self.name)}')
+    @staticmethod
+    def _show_case(product=None):
+        if product is None:
+            print(f'Ассортимент магазина {Store.title}:')
+            for k, v in Store.products.items():
+                print(f'Количество товара {k}: {v[1]}, суммарная стоимость: {v[1] * v[0]}')
+        elif product in Store.products:
+            print(f'Количество товара {product}: {Store.products.get(product)[1]}, '
+                  f'суммарная стоимость: {Store.products[product][0] * Store.products[product][1]}')
         else:
-            print(f'Товар {self.name} отсутсвует в магазине.')
+            print(f'Товар {product} отсутсвует в магазине.')
 
-pomidorka = Store('pomidorka', 11)
-pomidorka.add_product(3)
-ogurok = Store('ogurok', 9)
-ogurok.add_product(5)
-kartoha = Product('kartoha', 23)
+    @staticmethod
+    def _check_user_input(user_input):
+        try:
+            user_input = float(user_input)
+            if user_input > 0:
+                return user_input
+            else:
+                raise ValueError
+        except ValueError:
+            return False
 
-Store.add_product(kartoha, 9)
+    @staticmethod
+    def manager():
+        if Store.title is None:
+            Store.title = input('Введите наименование магазина: ')
+        while True:
+            if not Store.products:
+                print('Наш магазин совсем пуст :( Давайте добавим хотябы один товар.')
+                product_name = input('Введите имя товара: ').upper()
+                product_count = Store._check_user_input(input('Введите количество товара: '))
+                product_price = Store._check_user_input(input('Введите стоимость товара за штуку: ').replace(',', '.'))
+                if product_count and product_price:
+                    product = Product(product_name, product_price)
+                    Store._add_product(product, int(product_count))
+                else:
+                    print('Пожалуйста, введите корректные данные для количества и стоимости товара.')
+                    continue
+            else:
+                print('Если вы хотите добавить ещё один товар или пополнить количество существующего,'
+                      ' или изменить стоимость, введите Y.')
+                print('Если вы хотите завершить работу с программой, нажмите N.')
+                print('Если вы хотите просмотреть количество и стоимость определённого продукта, '
+                      'введите его наименование.')
+                print('Если вы хотите увидеть все полки магазина, введите All.')
+                user_choise = input('Ваш выбор: ').upper()
+                if user_choise == 'N':
+                    print(f'Спасибо, что выбрали наш магазин {Store.title}!')
+                    break
+                elif user_choise == 'Y':
+                    product_name = input('Введите наименование товара: ').upper()
+                    product_count = Store._check_user_input(input('Введите количество товара: '))
+                    product_price = Store._check_user_input(input('Введите стоимость товара за штуку: ')
+                                                            .replace(',', '.'))
+                    if product_count and product_price:
+                        if product_name not in Store.products:
+                            product = Product(product_name, product_price)
+                            Store._add_product(product, int(product_count))
+                        elif product_name in Store.products:
+                            Store.products[product_name][1] += int(product_count)
+                            Store.products[product_name][0] = product_price
+                    else:
+                        print('Пожалуйста, введите корректные данные для количества и стоимости товара.')
+                        continue
+                elif user_choise in Store.products:
+                    Store._show_case(user_choise)
+                elif user_choise == 'ALL':
+                    Store._show_case()
+                else:
+                    print('Пожалуйста, сделайте выбор из предложенных вариантов.')
 
-ogurok.show_case()
-pomidorka.show_case()
-Store.show_case(kartoha)
 
-print()
-Store.show_case(ogurok)
-print()
-Store.show_case()
+Store.manager()
+
+
