@@ -23,19 +23,22 @@ class Product:
 class Store:
     products = {}
     title = None
-    file = '/home/anton/Документы/Training/products.txt'
+    file = 'products.txt'
 
     @staticmethod
     def _read_from_file():
         try:
             with open(Store.file, 'r') as read_file:
-               return json.load(read_file)
-        except:
-            return {}
+                internal_title = read_file.readline().strip()
+                internal_products = json.loads(read_file.readline())
+                return internal_title, internal_products
+        except(FileNotFoundError, FileExistsError):
+            return None, {}
 
     @staticmethod
     def _write_to_file():
         with open(Store.file, 'w') as write_file:
+            write_file.write(Store.title + '\n')
             json.dump(Store.products, write_file)
 
     @staticmethod
@@ -47,7 +50,7 @@ class Store:
     @staticmethod
     def _show_case(product=None):
         if product is None:
-            print(f'Ассортимент магазина {Store.title}:')
+            decor_output(f'Ассортимент магазина {Store.title}:')
             for k, v in Store.products.items():
                 print(f'Количество товара {k}: {v[1]}, суммарная стоимость: {round(v[1] * v[0], 2)}')
             print()
@@ -71,9 +74,11 @@ class Store:
 
     @staticmethod
     def manager():
+        Store.title, Store.products = Store._read_from_file()
         if Store.title is None:
             Store.title = input('Введите наименование магазина: ')
-            Store.products = Store._read_from_file()
+        else:
+            decor_output(f'Добро пожаловать в магазин {Store.title}!')
         while True:
             if not Store.products:
                 decor_output('Наш магазин совсем пуст :( Давайте добавим хотябы один товар.')
@@ -83,6 +88,7 @@ class Store:
                 if product_count and product_price:
                     product = Product(product_name, product_price)
                     Store._add_product(product, int(product_count))
+                    decor_output('Продукт успешно добавлен на полку магазина!')
                 else:
                     decor_output('Пожалуйста, введите корректные данные для количества и стоимости товара.')
                     continue
@@ -108,9 +114,11 @@ class Store:
                         if product_name not in Store.products:
                             product = Product(product_name, product_price)
                             Store._add_product(product, int(product_count))
+                            decor_output('Продукт успешно добавлен на полку магазина!')
                         elif product_name in Store.products:
                             Store.products[product_name][1] += int(product_count)
                             Store.products[product_name][0] = product_price
+                            decor_output('Данные по продукту успешно изменены!')
                     else:
                         decor_output('Пожалуйста, введите корректные данные для количества и стоимости товара.')
                         continue
