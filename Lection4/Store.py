@@ -1,5 +1,19 @@
 import json
 
+
+def _decor_output(func):
+    def wrapper(inp_str):
+        print('=' * len(inp_str))
+        func(inp_str)
+        print('=' * len(inp_str))
+    return wrapper
+
+
+@_decor_output
+def decor_output(in_str):
+    print(in_str)
+
+
 class Product:
     def __init__(self, name, price):
         self.name = name
@@ -35,22 +49,24 @@ class Store:
         if product is None:
             print(f'Ассортимент магазина {Store.title}:')
             for k, v in Store.products.items():
-                print(f'Количество товара {k}: {v[1]}, суммарная стоимость: {v[1] * v[0]}')
+                print(f'Количество товара {k}: {v[1]}, суммарная стоимость: {round(v[1] * v[0], 2)}')
+            print()
         elif product in Store.products:
-            print(f'Количество товара {product}: {Store.products.get(product)[1]}, '
-                  f'суммарная стоимость: {Store.products[product][0] * Store.products[product][1]}')
+            decor_output(f'Количество товара {product}: {Store.products.get(product)[1]}, '
+                            f'суммарная стоимость: {round(Store.products[product][0] * Store.products[product][1], 2)}')
         else:
-            print(f'Товар {product} отсутсвует в магазине.')
+            decor_output(f'Товар {product} отсутсвует в магазине.')
 
     @staticmethod
     def _check_user_input(user_input):
         try:
             user_input = float(user_input)
-            if user_input > 0:
+            if 0 < user_input < 1000:
                 return user_input
             else:
-                raise ValueError
-        except ValueError:
+                print('Не вводите таких больших чисел ;)')
+                raise Exception
+        except (ValueError, Exception):
             return False
 
     @staticmethod
@@ -60,7 +76,7 @@ class Store:
             Store.products = Store._read_from_file()
         while True:
             if not Store.products:
-                print('Наш магазин совсем пуст :( Давайте добавим хотябы один товар.')
+                decor_output('Наш магазин совсем пуст :( Давайте добавим хотябы один товар.')
                 product_name = input('Введите имя товара: ').upper()
                 product_count = Store._check_user_input(input('Введите количество товара: '))
                 product_price = Store._check_user_input(input('Введите стоимость товара за штуку: ').replace(',', '.'))
@@ -68,7 +84,7 @@ class Store:
                     product = Product(product_name, product_price)
                     Store._add_product(product, int(product_count))
                 else:
-                    print('Пожалуйста, введите корректные данные для количества и стоимости товара.')
+                    decor_output('Пожалуйста, введите корректные данные для количества и стоимости товара.')
                     continue
             else:
                 print('Если вы хотите добавить ещё один товар или пополнить количество существующего,'
@@ -79,7 +95,7 @@ class Store:
                 print('Если вы хотите увидеть все полки магазина, введите All.')
                 user_choise = input('Ваш выбор: ').upper()
                 if user_choise == 'N':
-                    print(f'Спасибо, что выбрали наш магазин {Store.title}!')
+                    decor_output(f'Спасибо, что выбрали наш магазин {Store.title}!')
                     if Store.products:
                         Store._write_to_file()
                     break
@@ -96,16 +112,14 @@ class Store:
                             Store.products[product_name][1] += int(product_count)
                             Store.products[product_name][0] = product_price
                     else:
-                        print('Пожалуйста, введите корректные данные для количества и стоимости товара.')
+                        decor_output('Пожалуйста, введите корректные данные для количества и стоимости товара.')
                         continue
                 elif user_choise in Store.products:
                     Store._show_case(user_choise)
                 elif user_choise == 'ALL':
                     Store._show_case()
                 else:
-                    print('Пожалуйста, сделайте выбор из предложенных вариантов.')
+                    decor_output('Пожалуйста, сделайте выбор из предложенных вариантов.')
 
 
 Store.manager()
-
-
