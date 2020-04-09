@@ -1,3 +1,5 @@
+import json
+
 class Product:
     def __init__(self, name, price):
         self.name = name
@@ -7,6 +9,20 @@ class Product:
 class Store:
     products = {}
     title = None
+    file = '/home/anton/Документы/Training/products.txt'
+
+    @staticmethod
+    def _read_from_file():
+        try:
+            with open(Store.file, 'r') as read_file:
+               return json.load(read_file)
+        except:
+            return {}
+
+    @staticmethod
+    def _write_to_file():
+        with open(Store.file, 'w') as write_file:
+            json.dump(Store.products, write_file)
 
     @staticmethod
     def _add_product(product, number_of_products=1):
@@ -41,6 +57,7 @@ class Store:
     def manager():
         if Store.title is None:
             Store.title = input('Введите наименование магазина: ')
+            Store.products = Store._read_from_file()
         while True:
             if not Store.products:
                 print('Наш магазин совсем пуст :( Давайте добавим хотябы один товар.')
@@ -63,6 +80,8 @@ class Store:
                 user_choise = input('Ваш выбор: ').upper()
                 if user_choise == 'N':
                     print(f'Спасибо, что выбрали наш магазин {Store.title}!')
+                    if Store.products:
+                        Store._write_to_file()
                     break
                 elif user_choise == 'Y':
                     product_name = input('Введите наименование товара: ').upper()
