@@ -61,7 +61,7 @@ class Manager:
             if 0 < user_input < 1000:
                 return user_input
             else:
-                decor_output('Не вводите таких больших чисел ;)')
+                decor_output('Количество и стоимость товара должны быть меньше 1000.')
                 raise ProductPriceCountException
         except (ValueError, ProductPriceCountException):
             return False
@@ -98,14 +98,13 @@ class Manager:
                 product_count = Manager._check_user_input(input('Введите количество товара: '))
                 if not product_count:
                     continue
-                product_price = Manager._check_user_input(input('Введите стоимость товара за штуку: ').replace(',', '.'))
-                if product_count and product_price:
-                    product = Product(product_name, product_price)
-                    Store.add_product(product, int(product_count))
-                    decor_output('Продукт успешно добавлен на полку магазина!')
-                else:
-                    decor_output('Пожалуйста, введите корректные данные для количества и стоимости товара.')
+                product_price = Manager._check_user_input(
+                    input('Введите стоимость товара за штуку: ').replace(',', '.'))
+                if not product_price:
                     continue
+                product = Product(product_name, product_price)
+                Store.add_product(product, int(product_count))
+                decor_output('Продукт успешно добавлен на полку магазина!')
             else:
                 print('Если вы хотите добавить ещё один товар или пополнить количество существующего,'
                       ' или изменить стоимость, введите Y.')
@@ -122,20 +121,20 @@ class Manager:
                 elif user_choise == 'Y':
                     product_name = input('Введите наименование товара: ').upper()
                     product_count = Manager._check_user_input(input('Введите количество товара: '))
+                    if not product_count:
+                        continue
                     product_price = Manager._check_user_input(input('Введите стоимость товара за штуку: ')
                                                               .replace(',', '.'))
-                    if product_count and product_price:
-                        if product_name not in Store.products:
-                            product = Product(product_name, product_price)
-                            Store.add_product(product, int(product_count))
-                            decor_output('Продукт успешно добавлен на полку магазина!')
-                        elif product_name in Store.products:
-                            Store.products[product_name][1] += int(product_count)
-                            Store.products[product_name][0] = product_price
-                            decor_output('Данные по продукту успешно изменены!')
-                    else:
-                        decor_output('Пожалуйста, введите корректные данные для количества и стоимости товара.')
+                    if not product_price:
                         continue
+                    if product_name not in Store.products:
+                        product = Product(product_name, product_price)
+                        Store.add_product(product, int(product_count))
+                        decor_output('Продукт успешно добавлен на полку магазина!')
+                    elif product_name in Store.products:
+                        Store.products[product_name][1] += int(product_count)
+                        Store.products[product_name][0] = product_price
+                        decor_output(f'Данные по продукту {product_name} успешно изменены!')
                 elif user_choise in Store.products:
                     Store.show_case(new_store, user_choise)
                 elif user_choise == 'ALL':
