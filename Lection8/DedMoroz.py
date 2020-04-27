@@ -4,6 +4,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from json import dump as jdump
 from json import dumps as jdumps
 from fpdf import FPDF
+from docx import Document
 
 class DedMoroz:
     def __init__(self, name:str, behavior:bool, gifts=None):
@@ -74,12 +75,19 @@ class DedMoroz:
         pdf.multi_cell(200, 5, txt=self.out_message)
         pdf.output(file)
 
+    def write_file_docx(self):
+        doc = Document()
+        doc.add_heading('Письмо от Деда Мороза.')
+        doc.add_paragraph(self.out_message)
+        doc.save('/home/anton/PycharmProjects/training/DedMoroz/' + str(self.name) + '.docx')
+
 
 recipient1 = DedMoroz('Anton', True, {'Загородный коттедж со всеми удобствами': 1,
                                       'Новый автомобиль иномарка': 2, 'Квартира в Минске': 3,
                                       'Денежный приз': '5 миллионов долларов США'})
 #recipient1.write_file_pdf_lab()
 recipient1.write_file_pdf_fpdf()
+recipient1.write_file_docx()
 
 recipient2 = DedMoroz(name='Kate', behavior=True, gifts=['Квартира в Минске', 'Новая иномарка',
                                                          'Загородный коттедж', 'Путёвка на Мальдивы.'])
