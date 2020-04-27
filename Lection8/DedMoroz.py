@@ -1,3 +1,6 @@
+from reportlab.pdfgen import canvas
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from json import dump as jdump
 from json import dumps as jdumps
 from fpdf import FPDF
@@ -7,30 +10,35 @@ class DedMoroz:
         self.name = name
         self.behavior = behavior
         self.gifts = gifts
+        self.out_message = self._print_welcome_message()
 
         self._print_welcome_message()
         if isinstance(self.gifts, dict):
-            self._print_gifts_dict()
+            self.out_message += self._print_gifts_dict()
         elif isinstance(self.gifts, list):
-            self._print_gifts_list()
+            self.out_message += self._print_gifts_list()
         elif self.gifts is None and self.behavior:
-            print('к сожалению, у Дедушки Мороза не хватило на всех подарков. '
-                  'Не расстраивайся, он обязательно что-нибудь придумает ;)')
+            self.out_message += 'к сожалению, у Дедушки Мороза не хватило на всех подарков.\n' \
+                           'Не расстраивайся, он обязательно что-нибудь придумает ;)\n'
         elif self.gifts is not None and not isinstance(self.gifts, (dict, list)):
             raise Exception('Не поддерживаемый формат подарков.')
-        self._write_file()
+        print(self.out_message)
 
     def _print_welcome_message(self):
-        print(f'Здравствуй, мой дорогой друг, {self.name}. В этом году твоё поведение было',
-              'хорошим.' if self.behavior else 'не очень хорошим.', 'Поэтому, за такое поведение, Дедушка Мороз тебе',
-              'принёс: ' if self.behavior else 'ничего не принёс.\nПостарайся в следующем году.')
+        message = f'Здравствуй, мой дорогой друг, {self.name}.\nВ этом году твоё поведение было '
+        message += 'хорошим.\n' if self.behavior else 'не очень хорошим.\n'
+        message += 'Поэтому, за такое поведение, Дедушка Мороз тебе '
+        message += 'принёс:\n' if self.behavior else 'ничего не принёс.\nПостарайся в следующем году.\n'
+        return message
 
     def _print_gifts_dict(self):
+        message = ''
         for gift, count in self.gifts.items():
-            print(f'{gift}: {count}')
+            message += f'> {gift}: {count}\n'
+        return message
 
     def _print_gifts_list(self):
-        print(*self.gifts, sep=', ')
+        return '> '+'\n> '.join(self.gifts)
 
     def _write_file(self):
         file = '/home/anton/PycharmProjects/training/DedMoroz/' + str(self.name) + '.txt'
@@ -38,31 +46,48 @@ class DedMoroz:
             wf.write(self.name + '\n' + str(self.behavior) + '\n')
             jdump(self.gifts, wf)
 
-    def write_file_pdf(self):
+    def write_file_pdf_lab(self):
+        pdfmetrics.registerFont(TTFont('DejaVuSerif', 'DejaVuSerif.ttf'))
+        file = '/home/anton/PycharmProjects/training/DedMoroz/' + str(self.name) + '.pdf'
+        pdf = canvas.Canvas(file)
+        pdf.setFont('DejaVuSerif', 20)
+        pdf.setTitle('Письмо от Деда Мороза!')
+        pdf.drawString(170, 770, 'Письмо от Деда Мороза!')
+        pdf.setFont('DejaVuSerif', 15)
+        y = 670
+        index = 0
+        message = self.out_message
+        for line in range(len(message)):
+            if message[line] == '\n':
+                pdf.drawString(20, y, message[index:line])
+                index = line + 1
+                y -= 20
+        pdf.save()
+
+    def write_file_pdf_fpdf(self):
         file = '/home/anton/PycharmProjects/training/DedMoroz/' + str(self.name) + '.pdf'
         pdf = FPDF()
+        #pdf.SYSTEM_TTFONTS = '/some/path'
+        pdf.add_font('DejaVuSerif', '', 'DejaVuSerif.ttf', uni=True)
         pdf.add_page()
-        pdf.set_font("Arial", size=12)
-        pdf.cell(100, 10, txt=self.name)
-        pdf.cell(100, 10, txt=str(self.behavior))
+        pdf.set_font("DejaVuSerif", size=15)
+        pdf.multi_cell(200, 5, txt=self.out_message)
         pdf.output(file)
-
 
 
 recipient1 = DedMoroz('Anton', True, {'Загородный коттедж со всеми удобствами': 1,
                                       'Новый автомобиль иномарка': 2, 'Квартира в Минске': 3,
                                       'Денежный приз': '5 миллионов долларов США'})
-print()
-recipient1.write_file_pdf()
+#recipient1.write_file_pdf_lab()
+recipient1.write_file_pdf_fpdf()
 
 recipient2 = DedMoroz(name='Kate', behavior=True, gifts=['Квартира в Минске', 'Новая иномарка',
                                                          'Загородный коттедж', 'Путёвка на Мальдивы.'])
-print()
 
 recipient3 = DedMoroz(name='BadBoy', behavior=False)
-print()
+recipient3.write_file_pdf_lab()
 
 recipient4 = DedMoroz(name='GoodBoy', behavior=True)
-print()
+recipient4.write_file_pdf_lab()
 
 #recipient5 = DedMoroz(name='TestBoy', behavior=True, gifts='Падаруначки...')
