@@ -7,11 +7,13 @@
 <body>
 <div><h1>Homework. Lection 9.</h1></div>
 <div>
-    <p>Hello, <strong><em>{{ name }}!</em></strong></p>
-    <p>Did you know that your name consists of <strong>{{ name_lenght }}</strong> letters?</p>
-    <p>And your name spells backwards as <b>{{ name_reversed }}</b> ;)</p>
+    {% if name %}
+        <p>Hello, <strong><em>{{ name }}!</em></strong></p>
+        <p>Did you know that your name consists of <strong>{{ name_lenght }}</strong> letters?</p>
+        <p>And your name spells backwards as <b>{{ name_reversed }}</b> ;)</p>
+    {% endif %}
     <p>Your type is <b>{{ type }}</b>.</p>
-    <p>Are you a humanoid? <b>{{ humanoid }}!</b></p>
+    <p>Are you a humanoid? <b>{{ humanoid }}</b></p>
 </div>
 </body>
 </html>
