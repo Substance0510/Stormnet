@@ -1,24 +1,17 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-<!--    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">-->
-<!--    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">-->
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/blog.css' %}">
-    <title>Постики в бложке ;)</title>
-</head>
-<body>
-    <div class="page_header"><h1>Мой бложик:</h1></div>
+{% extends 'blog/template.html' %}
+{% block title %} Бложик ;) {% endblock title %}
+
+{% block header %}
+    <h1>Постики в бложике ;)</h1>
+{% endblock header %}
+{% block articles %}
     {% for post in posts %}
     <div class="post">
-           <p>published: {{ post.published_date }}</p>
-        <h1><a href="">{{ post.title }}</a></h1>
+        <hr />
+        <p>published: {{ post.published_date }}</p>
+        <h2><a href="">{{ post.title }}</a></h2>
         <p>{{ post.text|linebreaksbr }}</p>
     </div>
-    {% endfor %}
-</body>
-</html>
+{% endfor %}
+<hr />
+{% endblock articles %}

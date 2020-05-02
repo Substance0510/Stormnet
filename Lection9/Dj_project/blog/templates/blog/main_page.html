@@ -1,14 +1,5 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Самы чэсны сайт!</title>
-    <style>
-        body {background:pink}
-        h1 {color:green}
-    </style>
-</head>
-<body>
+{% extends 'blog/template.html' %}
+
 {% block header %}
 <header>
     <div><h1>Самая галоуная страница!</h1></div>
@@ -17,8 +8,8 @@
 
 {% block articles %}
 <article>
-    <p>Hello, World! Ёпта!</p>
     <div id="choise">
+        <p>Навигация по сайтику:</p>
         <ol>
             <li><a href="ded">На страничку Дедушки Мороза!</a></li>
             <li><a href="homework">К домашке!</a></li>
@@ -27,9 +18,3 @@
     </div>
 </article>
 {% endblock articles %}
-
-{% block footer %}
-<footer>Подвальчег.</footer>
-{% endblock footer %}
-</body>
-</html>

@@ -1,19 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Homework</title>
-</head>
+{% extends 'blog/template.html' %}
+{% block title %} Домашка. {% endblock title %}
+
+{% block header %}
+<header>
+    <div><h1>Домашка к 9ой лекции.</h1></div>
+</header>
+{% endblock header %}
+
+{% block articles %}
 <body>
 <div><h1>Homework. Lection 9.</h1></div>
-<div>
-    {% if name %}
-        <p>Hello, <strong><em>{{ name }}!</em></strong></p>
-        <p>Did you know that your name consists of <strong>{{ name_lenght }}</strong> letters?</p>
-        <p>And your name spells backwards as <b>{{ name_reversed }}</b> ;)</p>
-    {% endif %}
-    <p>Your type is <b>{{ type }}</b>.</p>
-    <p>Are you a humanoid? <b>{{ humanoid }}</b></p>
-</div>
+    <div id = 'homework'>
+        Hello, <b><em>{{ name }}!</em></b>
+        <br /> <hr />
+        Did you know that your name consists of <b>{{ name_lenght }}</b> letters?
+        <br /> <hr />
+        And your name spells backwards as <b>{{ name_reversed }}</b> ;)
+        <br /> <hr />
+        Your type is <b>{{ type }}</b>.
+        <br /> <hr />
+        Are you a humanoid? <b>{{ humanoid }}</b>
+        <hr />
+    </div>
 </body>
-</html>
+{% endblock articles %}

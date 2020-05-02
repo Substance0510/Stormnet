@@ -1,9 +1,27 @@
-h1 a {
+h1  {
     color: red;
-    font-family: 'Bangers';
+    font-family: 'Lobster', cursive;
+    font-size: 50px;
 }
 
 body {
     padding-left: 15px;
-    margin-top: 15px
+    margin-top: 15px;
+    background: pink;
+    color: green;
+}
+
+footer {
+    border: 5px dashed #20bcd5;
+    padding: 20px;
+    margin-top: 20%;
+    text-align: center;
+    font-size: 50px;
+}
+
+.rightpic {
+float: right; /* Выравнивание по правому краю */
+margin: 0 0 0px 0px; /* Отступы вокруг картинки */
+height: 20%;
+width: 20%;
 }

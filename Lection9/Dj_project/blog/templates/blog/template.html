@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/blog.css' %}">
+    <title>Самы чэсны сайт!{% block title %}{% endblock title %}</title>
+</head>
+<body>
+<header>
+    <p style="text-align: right;"><a href="{% url 'main_page' %}"><img src="{% static  'images/logo.png' %}" alt="logo"
+                                                   class="rightpic"></a></p>
+    {% block header %}
+    {% endblock header %}
+</header>
+
+<article>
+    {% block articles %}
+    {% endblock articles %}
+</article>
+
+<footer>
+    {% block footer %}
+        {% include 'blog/includes/footer.html' %}
+    {% endblock footer %}
+</footer>
+</body>
+</html>
