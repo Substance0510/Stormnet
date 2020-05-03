@@ -17,10 +17,22 @@
         <br /> <hr />
         And your name spells backwards as <b>{{ name_reversed }}</b> ;)
         <br /> <hr />
-        Your type is <b>{{ type }}</b>.
+        Your type is: <b>{{ type }}</b>.
         <br /> <hr />
         Are you a humanoid? <b>{{ humanoid }}</b>
         <hr />
     </div>
+    <form action="{% url 'homework' %}" method="get">
+        <label><b>Enter information about yourself:</b></label><br />
+        <input type="text" placeholder="Input your name here" name="name"><br /><br />
+        <label><b>Make your choise, Neo!</b></label><br />
+        <input type="radio" name="type" value="Robot!">I'm a Robocop!
+        <input type="radio" name="type" value="This isn't your Trinity, Neo. Look elsewhere!">I am the chosen one!
+        <input type="radio" name="type" value="The man sounds proud!">Just a man.<br /><br />
+        <label><b>Are you a humanoid?</b></label><br />
+        <input type="radio" name="humanoid" value="Yes!">Yeah, sir!
+        <input type="radio" name="humanoid" value="No!">Nope :(<br /><br />
+        <input type="submit" value="Send">
+    </form>
 </body>
 {% endblock articles %}

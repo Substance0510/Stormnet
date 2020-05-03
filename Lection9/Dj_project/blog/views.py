@@ -13,14 +13,14 @@ def post_list(request):
 
 def homework(request):
     name = request.GET.get('name')
-    if name is None:
+    if name is None or name == '':
         name = 'John Doo'
     print(name)
     type = request.GET.get('type')
-    if type is None:
+    if type is None or type == '':
         type = 'Unknown'
     humanoid = request.GET.get('humanoid')
-    if humanoid is None:
+    if humanoid is None or humanoid == '':
         humanoid = 'I don\'t know :('
     context = {'name': name,
                'name_lenght': len(name.replace(' ', '')),
