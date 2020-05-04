@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.models import User
 from django.utils import timezone
 from . models import Post
 
@@ -8,8 +9,15 @@ def main_page(request):
 
 
 def post_list(request):
-    posts = Post.objects.all().order_by('-published_date')
-    return render(request, 'blog/post_list.html', {'posts': posts})
+    authors = User.objects.all()
+    user_choise = request.GET.get('authors_filter')
+    if user_choise:
+        selected_author = User.objects.get(username=user_choise)
+        posts = Post.objects.all().filter(author=selected_author).order_by('-published_date')
+    else:
+        posts = Post.objects.all().order_by('-published_date')
+        selected_author = None
+    return render(request, 'blog/post_list.html', {'posts': posts, 'authors': authors, 'author': selected_author})
 
 def homework(request):
     name = request.GET.get('name')

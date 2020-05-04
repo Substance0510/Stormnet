@@ -5,13 +5,22 @@
     <h1>Постики в бложике ;)</h1>
 {% endblock header %}
 {% block articles %}
-    {% for post in posts %}
+<form action="{% url 'post_list' %}" method="get">
+    <label><b>Выберите автора:</b></label>
+    <select name="authors_filter">
+        {% for author in authors %}
+            <option>{{ author }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Отфильтровать">
+</form>
     <div class="post">
-        <hr />
-        <p>published: {{ post.published_date }}</p>
-        <h2><a href="">{{ post.title }}</a></h2>
-        <p>{{ post.text|linebreaksbr }}</p>
+        {% for post in posts %}
+            <hr />
+            <p>published: {{ post.published_date }}</p>
+            <h2><a href="">{{ post.title }}</a></h2>
+            <p>{{ post.text|linebreaksbr }}</p>
+        {% endfor %}
     </div>
-{% endfor %}
 <hr />
 {% endblock articles %}
