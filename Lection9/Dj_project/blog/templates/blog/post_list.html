@@ -8,6 +8,7 @@
 <form action="{% url 'post_list' %}" method="get">
     <label><b>Выберите автора:</b></label>
     <select name="authors_filter">
+        <option>Все авторы</option>
         {% for author in authors %}
             <option>{{ author }}</option>
         {% endfor %}
