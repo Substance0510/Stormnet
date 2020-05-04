@@ -18,9 +18,11 @@
     <div class="post">
         {% for post in posts %}
             <hr />
-            <p>published: {{ post.published_date }}</p>
-            <h2><a href="">{{ post.title }}</a></h2>
-            <p>{{ post.text|linebreaksbr }}</p>
+            <p>Дата публикации: {{ post.published_date }}</p>
+            <h2><a href="{% url 'post' %}?id={{ post.pk }}">{{ post.title }}</a></h2>
+            <label>Автор: {{ post.author }}</label>
+            <p>{{ post.text|linebreaksbr|truncatechars:200 }}</p>
+            <a href="{% url 'post' %}?id={{ post.pk }}">Читать полностью...</a>
         {% endfor %}
     </div>
 <hr />

@@ -39,3 +39,9 @@ def homework(request):
 
 def ded_moroz(request):
     return render(request, 'blog/ded_moroz.html')
+
+def post(request):
+    post_id = request.GET.get('id')
+    selected_post = Post.objects.get(pk=post_id)
+    context = {'id': post_id, 'selected_post': selected_post}
+    return render(request, 'blog/post.html', context=context)
