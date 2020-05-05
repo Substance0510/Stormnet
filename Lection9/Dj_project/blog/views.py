@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.utils import timezone
 from . models import Post
+from django.http import Http404
 
 
 def main_page(request):
@@ -14,9 +15,10 @@ def post_list(request):
     selected_author = None
     if user_choise and user_choise != 'Все авторы':
         selected_author = User.objects.get(username=user_choise)
-        posts = Post.objects.all().filter(author=selected_author).order_by('-published_date')
+        posts = Post.objects.all().filter(author=selected_author).filter(published_date__lte=timezone.now())\
+            .order_by('-published_date')
     else:
-        posts = Post.objects.all().order_by('-published_date')
+        posts = Post.objects.all().filter(published_date__lte=timezone.now()).order_by('-published_date')
     return render(request, 'blog/post_list.html', {'posts': posts, 'authors': authors, 'author': selected_author})
 
 def homework(request):
@@ -43,5 +45,7 @@ def ded_moroz(request):
 def post(request):
     post_id = request.GET.get('id')
     selected_post = Post.objects.get(pk=post_id)
+    if selected_post.published_date > timezone.now():
+        raise Http404
     context = {'id': post_id, 'selected_post': selected_post}
     return render(request, 'blog/post.html', context=context)
