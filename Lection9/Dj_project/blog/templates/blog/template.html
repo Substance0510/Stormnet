@@ -25,7 +25,7 @@
                 <div class="col-md-2">
                     <div class="row">
                         <div class="col-md-12">
-                    <a href="{% url 'main_page' %}"><img src="{% static  'images/small_logo.png' %}"
+                            <a href="{% url 'main_page' %}"><img src="{% static  'images/small_logo.png' %}"
                                                                                    alt="logo" class="rightpic"></a>
                         </div>
                     </div>
@@ -34,17 +34,9 @@
         </header>
 
         <article>
-            <div class="row">
-                <nav>
-                    <div class="col-md-12">
-                        <ol>
-                            <li><a href="{% url 'ded_moroz' %}">На страничку Дедушки Мороза!</a></li>
-                            <li><a href="{% url 'homework' %}">К домашке!</a></li>
-                            <li><a href="{% url 'post_list' %}">В бложик к постикам!</a></li>
-                        </ol>
-                    </div>
-                </nav>
-            </div>
+<!--            <div class="row">-->
+
+<!--            </div>-->
             {% block articles %}
             {% endblock articles %}
         </article>

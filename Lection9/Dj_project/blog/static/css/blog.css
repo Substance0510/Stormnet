@@ -4,6 +4,18 @@ h1  {
     font-size: 50px;
 }
 
+h2  {
+    padding: 10px;
+    font-family: 'Lobster', cursive;
+    font-size: 30px;
+}
+
+
+h3  {
+    padding: 40px;
+    font-size: 20px;
+}
+
 body {
     padding-left: 15px;
     margin-top: 15px;
@@ -13,10 +25,10 @@ body {
 
 footer {
     border: 5px dashed #20bcd5;
-    padding: 20px;
-    margin-top: 20%;
+    padding: 10px;
+    margin-top: 10%;
     text-align: center;
-    font-size: 50px;
+    font-size: 20px;
 }
 
 .rightpic {
@@ -24,4 +36,15 @@ float: right; /* Выравнивание по правому краю */
 /* margin: 10 10 10px 10px; /* Отступы вокруг картинки */
 /* height: 100%;
 width: 100%; */
+}
+
+ol.navigation_bar {
+margin: 0; /* Обнуляем значение отступов */
+padding: 4px; /* Значение полей */
+}
+ol.navigation_bar li {
+display: inline; /* Отображать как строчный элемент */
+/* margin-right: 50px; /* Отступ слева */
+/* border: 1px solid #000; /* Рамка вокруг текста */
+padding: 100px; /* Поля вокруг текста */
 }

@@ -21,7 +21,7 @@
 </div>
 <div class="row">
     {% for post in posts %}
-        <div class="col-md-4">
+        <div class="col-md-4" style="background-color: #fcc2e6">
             <hr />
             <p>Дата публикации: {{ post.published_date }}</p>
             <h2><a href="{% url 'post' %}?id={{ post.pk }}">{{ post.title }}</a></h2>
