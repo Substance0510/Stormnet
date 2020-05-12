@@ -1,9 +1,14 @@
 {% extends 'blog/template.html' %}
 
+{% block header %}
+
+    <h1> {{ selected_post.title }}</h1>
+
+{% endblock header %}
+
 {% block articles %}
     <div class="post">
         <p>Дата публикации: {{ selected_post.published_date }}</p>
-        <h2><a href="">{{ selected_post.title }}</a></h2>
         <label>Автор: {{ selected_post.author }}</label>
         <p>{{ selected_post.text|linebreaksbr }}</p>
         <br /><br /><hr />
