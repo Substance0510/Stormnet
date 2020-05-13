@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.utils import timezone
-from . models import Post
+from . models import Post, Comment
 from django.http import Http404
 
 
@@ -39,13 +39,18 @@ def homework(request):
                'humanoid': humanoid}
     return render(request, 'blog/homework.html', context=context)
 
+
 def ded_moroz(request):
     return render(request, 'blog/ded_moroz.html')
+
 
 def post(request):
     post_id = request.GET.get('id')
     selected_post = Post.objects.get(pk=post_id)
+    comments = Comment.objects.all().filter(page=selected_post)
+    # if not comments:
+    #     comments = 'Комментариев к этой статье ещё нет. Будьте первым ;)'
     if selected_post.published_date > timezone.now():
         raise Http404
-    context = {'id': post_id, 'selected_post': selected_post}
+    context = {'id': post_id, 'selected_post': selected_post, 'comments': comments}
     return render(request, 'blog/post.html', context=context)

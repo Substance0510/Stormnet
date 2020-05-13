@@ -48,3 +48,9 @@ display: inline; /* Отображать как строчный элемент 
 /* border: 1px solid #000; /* Рамка вокруг текста */
 padding: 100px; /* Поля вокруг текста */
 }
+
+.comments {
+padding: 100px;
+font-size: 15px;
+color: gray;
+}
