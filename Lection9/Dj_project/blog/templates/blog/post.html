@@ -3,6 +3,7 @@
 {% block header %}
 
     <h1> {{ selected_post.title }}</h1>
+    <hr />
 
 {% endblock header %}
 
@@ -10,6 +11,7 @@
     <div class="post">
         <p>Дата публикации: {{ selected_post.published_date }}</p>
         <label>Автор: {{ selected_post.author }}</label>
+        <hr />
         <p>{{ selected_post.text|linebreaksbr }}</p>
         <br /><br /><hr />
         <a href="{% url 'post_list' %}">Вернуться к списку статей.</a>
