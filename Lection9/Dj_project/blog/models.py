@@ -27,4 +27,4 @@ class Comment(models.Model):
     page = models.ForeignKey(Post, on_delete=models.DO_NOTHING)
 
     def __str__(self):
-        return f' { self.author}, {self.created_date}'
+        return '%s, %s' % (self.author, self.created_date)
