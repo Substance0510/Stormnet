@@ -42,6 +42,7 @@ ol.navigation_bar {
 margin: 0; /* Обнуляем значение отступов */
 padding: 4px; /* Значение полей */
 }
+
 ol.navigation_bar li {
 display: inline; /* Отображать как строчный элемент */
 /* margin-right: 50px; /* Отступ слева */
@@ -53,4 +54,8 @@ padding: 100px; /* Поля вокруг текста */
 padding: 100px;
 font-size: 15px;
 color: gray;
+}
+
+.comments p {
+background-color: #fcc2e6;
 }

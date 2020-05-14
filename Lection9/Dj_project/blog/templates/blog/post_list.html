@@ -6,7 +6,7 @@
 {% endblock header %}
 {% block articles %}
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-4">
         <form action="{% url 'post_list' %}" method="get">
             <label><b>Выберите автора:</b></label>
             <select name="authors_filter">
@@ -16,6 +16,18 @@
                 {% endfor %}
             </select>
             <input type="submit" value="Отфильтровать">
+        </form>
+    </div>
+    <div class="col-md-8">
+        <form action="{% url 'post_list' %}" method="get">
+            <label><b>Архив новостей на дату:</b></label>
+            <input type="date" name="archive_date"
+               value="{{ max_date }}"
+               min="{{ min_date }}" max="{{ max_date }}">
+            <input type="submit" value="Найти">
+            {% if archive_date %}
+                <a href="{% url 'post_list' %}">Вернуться к списку статей</a>
+            {% endif %}
         </form>
     </div>
 </div>

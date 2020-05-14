@@ -15,13 +15,20 @@
         <p>{{ selected_post.text|linebreaksbr }}</p>
         <hr />
         <div class="comments">
-        {% if comments %}
-            {% for comment in comments %}
-                <p> Комментарий от {{ comment.author }}:</p>
-                <p> Оставлен: {{ comment.created_date }} </p>
-                <p> {{ comment.text }} </p>
-            {% endfor %}
-        {% else %}
+            {% if comments %}
+            <div class="row">
+                <div class="col-md-8">
+                {% for comment in comments %}
+                    <p> Комментарий от {{ comment.author }}:<br />
+                    <br />
+                    Оставлен: {{ comment.created_date }}<br />
+                    <br />
+                    {{ comment.text }} </p>
+                    <br />
+                {% endfor %}
+                </div>
+            </div>
+            {% else %}
             <p>Комментариев к этой статье ещё нет. Будьте первым ;)</p>
         {% endif %}
         </div>
