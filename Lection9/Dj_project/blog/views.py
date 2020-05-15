@@ -13,15 +13,15 @@ def post_list(request):
     authors = User.objects.all()
     user_choise = request.GET.get('authors_filter')
     selected_author = None
+    posts = Post.objects.all().filter(published_date__lte=timezone.now()).order_by('-published_date')
     max_date = dateformat.format(timezone.now(), 'Y-m-d')
-    min_date = dateformat.format(Post.objects.get(pk=1).created_date, 'Y-m-d')
+    min_date = dateformat.format(posts[len(posts)-1].published_date, 'Y-m-d')
     archive_date = request.GET.get('archive_date')
+
     if user_choise and user_choise != 'Все авторы':
         selected_author = User.objects.get(username=user_choise)
         posts = Post.objects.all().filter(author=selected_author).filter(published_date__lte=timezone.now())\
             .order_by('-published_date')
-    else:
-        posts = Post.objects.all().filter(published_date__lte=timezone.now()).order_by('-published_date')
 
     if archive_date:
         posts = Post.objects.all().filter(published_date__contains=archive_date).order_by('-published_date')
