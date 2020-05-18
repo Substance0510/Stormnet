@@ -24,7 +24,7 @@ class Post(models.Model):
 class Comment(models.Model):
     author = models.ForeignKey(User, default=3, on_delete=models.DO_NOTHING)
     created_date = models.DateTimeField(default=timezone.now)
-    text = models.TextField(max_length=1000)
+    text = models.TextField(max_length=1000, blank=False,)
     page = models.ForeignKey(Post, on_delete=models.DO_NOTHING)
 
     def __str__(self):

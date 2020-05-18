@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User, AnonymousUser
 from django.utils import timezone, dateformat
 from django.http import Http404
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from . models import Post, Comment
 from .forms import CommentForm
@@ -63,19 +64,21 @@ def post(request):
     post_id = request.GET.get('id')
     selected_post = Post.objects.get(pk=post_id)
     comments = Comment.objects.all().filter(page_id=post_id).order_by('-created_date')
+
+    if selected_post.published_date > timezone.now():
+        raise Http404
+
     if request.method == 'POST':
         new_comment = CommentForm(request.POST)
         if new_comment.is_valid():
             post_comment = new_comment.save(commit=False)
             post_comment.page = selected_post
-            #post_comment.author = AnonymousUser()
-            #post_comment.author = request.user.AnonymousUser()
+            # post_comment.author = AnonymousUser()
+            # post_comment.author = request.user
             post_comment.save()
+            return HttpResponseRedirect('?id=% s' % post_id)
+        #new_comment = CommentForm()
     else:
         new_comment = CommentForm()
-
-    if selected_post.published_date > timezone.now():
-        raise Http404
     context = {'id': post_id, 'selected_post': selected_post, 'comments': comments, 'new_comment': new_comment}
     return render(request, 'blog/post.html', context=context)
-    #return redirect('post_detail', pk=post.pk)

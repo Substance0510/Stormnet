@@ -23,7 +23,7 @@
             <div class="col-md-8">
                 <form method="post">
                     {% csrf_token %}
-                    <label>Что вы об этом думаете?{{ new_comment.as_p }}</label><br />
+                    <label>Что вы об этом думаете?<br />{{ new_comment.text }}</label><br />
                     <input type="submit" value="Отправить комментарий">
                 </form>
             </div>
