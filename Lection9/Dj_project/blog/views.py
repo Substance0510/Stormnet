@@ -1,8 +1,10 @@
 from django.shortcuts import render
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.utils import timezone, dateformat
-from . models import Post, Comment
 from django.http import Http404
+from django.shortcuts import redirect
+from . models import Post, Comment
+from .forms import CommentForm
 
 
 def main_page(request):
@@ -15,7 +17,7 @@ def post_list(request):
     selected_author = None
     posts = Post.objects.all().filter(published_date__lte=timezone.now()).order_by('-published_date')
     max_date = dateformat.format(timezone.now(), 'Y-m-d')
-    min_date = dateformat.format(posts[len(posts)-1].published_date, 'Y-m-d')
+    min_date = dateformat.format(posts.last().published_date, 'Y-m-d')
     archive_date = request.GET.get('archive_date')
 
     if user_choise and user_choise != 'Все авторы':
@@ -60,8 +62,20 @@ def ded_moroz(request):
 def post(request):
     post_id = request.GET.get('id')
     selected_post = Post.objects.get(pk=post_id)
-    comments = Comment.objects.all().filter(page_id=post_id)
+    comments = Comment.objects.all().filter(page_id=post_id).order_by('-created_date')
+    if request.method == 'POST':
+        new_comment = CommentForm(request.POST)
+        if new_comment.is_valid():
+            post_comment = new_comment.save(commit=False)
+            post_comment.page = selected_post
+            #post_comment.author = AnonymousUser()
+            #post_comment.author = request.user.AnonymousUser()
+            post_comment.save()
+    else:
+        new_comment = CommentForm()
+
     if selected_post.published_date > timezone.now():
         raise Http404
-    context = {'id': post_id, 'selected_post': selected_post, 'comments': comments}
+    context = {'id': post_id, 'selected_post': selected_post, 'comments': comments, 'new_comment': new_comment}
     return render(request, 'blog/post.html', context=context)
+    #return redirect('post_detail', pk=post.pk)

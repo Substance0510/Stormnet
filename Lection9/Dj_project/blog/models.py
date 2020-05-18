@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.contrib.auth.models import User, AnonymousUser
 from django.utils import timezone
 
 
@@ -10,7 +11,7 @@ class Post(models.Model):
     title = models.CharField(max_length=200)
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
-    published_date = models.DateTimeField(default=timezone.now)
+    published_date = models.DateTimeField(default=timezone.now, auto_created=True)
 
     def publish(self):
         self.published_date = timezone.now()
@@ -21,8 +22,8 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, auto_created=True, on_delete=models.DO_NOTHING)
-    created_date = models.DateTimeField(auto_now=True)
+    author = models.ForeignKey(User, default=3, on_delete=models.DO_NOTHING)
+    created_date = models.DateTimeField(default=timezone.now)
     text = models.TextField(max_length=1000)
     page = models.ForeignKey(Post, on_delete=models.DO_NOTHING)
 

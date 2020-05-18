@@ -14,25 +14,30 @@
         <hr />
         <p>{{ selected_post.text|linebreaksbr }}</p>
         <hr />
-        <div class="comments">
-            {% if comments %}
-            <div class="row">
-                <div class="col-md-8">
-                {% for comment in comments %}
-                    <p> Комментарий от {{ comment.author }}:<br />
-                    <br />
-                    Оставлен: {{ comment.created_date }}<br />
-                    <br />
-                    {{ comment.text }} </p>
-                    <br />
-                {% endfor %}
-                </div>
-            </div>
-            {% else %}
+    </div>
+    <div class="comments">
+        {% if not comments %}
             <p>Комментариев к этой статье ещё нет. Будьте первым ;)</p>
         {% endif %}
+        <div class="row">
+            <div class="col-md-8">
+                <form method="post">
+                    {% csrf_token %}
+                    <label>Что вы об этом думаете?{{ new_comment.as_p }}</label><br />
+                    <input type="submit" value="Отправить комментарий">
+                </form>
+            </div>
         </div>
-        <br /><br /><hr />
-        <a href="{% url 'post_list' %}">Вернуться к списку статей.</a>
+        {% if comments %}
+            {% for comment in comments %}
+                <p> Комментарий от {{ comment.author }}:<br />
+                <br />
+                Оставлен: {{ comment.created_date }}<br />
+                <br />
+                {{ comment.text }} </p>
+            {% endfor %}
+        {% endif %}
     </div>
+    <br /><br /><hr />
+    <a href="{% url 'post_list' %}">Вернуться к списку статей.</a>
 {% endblock articles %}

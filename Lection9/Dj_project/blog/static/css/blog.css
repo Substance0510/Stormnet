@@ -58,4 +58,10 @@ color: gray;
 
 .comments p {
 background-color: #fcc2e6;
+margin: 10px;
+}
+
+.posts{
+margin: 25px;
+background-color: #fcc2e6;
 }
