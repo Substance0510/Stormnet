@@ -1,9 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User, AnonymousUser
 from django.utils import timezone, dateformat
-from django.http import Http404
-from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
+from django.http import Http404, HttpResponseRedirect
+# from django.template import RequestContext
 from . models import Post, Comment
 from .forms import CommentForm
 
@@ -62,6 +61,8 @@ def ded_moroz(request):
 
 def post(request):
     post_id = request.GET.get('id')
+    if not Post.objects.filter(pk=post_id).exists():
+        raise Http404
     selected_post = Post.objects.get(pk=post_id)
     comments = Comment.objects.all().filter(page_id=post_id).order_by('-created_date')
 
@@ -82,3 +83,12 @@ def post(request):
         new_comment = CommentForm()
     context = {'id': post_id, 'selected_post': selected_post, 'comments': comments, 'new_comment': new_comment}
     return render(request, 'blog/post.html', context=context)
+
+
+# def view_404(request, exception):
+#     """
+#     Page not found Error 404
+#     """
+#     response = render('404.html', context=RequestContext(request))
+#     response.status_code = 404
+#     return response

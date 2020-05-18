@@ -15,7 +15,7 @@
                     <option>{{ author }}</option>
                 {% endfor %}
             </select>
-            <input type="submit" value="Отфильтровать">
+            <button type="submit" class="btn btn-primary">Отфильтровать</button>
         </form>
     </div>
     <div class="col-md-8">
@@ -24,7 +24,7 @@
             <input type="date" name="archive_date"
                value="{{ max_date }}"
                min="{{ min_date }}" max="{{ max_date }}">
-            <input type="submit" value="Найти">
+            <button type="submit" class="btn btn-primary">Найти</button>
             {% if archive_date %}
                 {% if not posts %}
             <p><i>К сожалению в этот день новостей не было. Попробуйте указать другую дату.</i></p>
