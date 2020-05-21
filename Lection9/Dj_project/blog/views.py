@@ -23,7 +23,8 @@ def post_list(request):
 
     if archive_date_start and archive_date_stop:
         archive_date_start = datetime.strptime(archive_date_start, '%Y-%m-%d')
-        archive_date_stop = datetime.strptime(archive_date_stop, '%Y-%m-%d')
+        archive_date_stop = datetime.strptime(archive_date_stop + ' 23:59:59', '%Y-%m-%d %H:%M:%S')
+        print(archive_date_stop)
         posts = Post.objects.all().filter(published_date__gte=archive_date_start,
                                           published_date__lte=archive_date_stop).order_by('-published_date')
         value_date_min = dateformat.format(archive_date_start, 'Y-m-d')
