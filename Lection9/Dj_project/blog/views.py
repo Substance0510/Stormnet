@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User, AnonymousUser
 from django.utils import timezone, dateformat
-from django.http import Http404, HttpResponseRedirect
-# from django.template import RequestContext
+from django.http import Http404, HttpResponseRedirect, HttpResponseNotFound, HttpResponse
+from datetime import datetime
 from . models import Post, Comment
 from .forms import CommentForm
 
@@ -12,35 +12,47 @@ def main_page(request):
 
 
 def post_list(request):
-    authors = User.objects.all()
+    authors = User.objects.all().filter(is_staff=True)
     user_choise = request.GET.get('authors_filter')
     selected_author = None
     posts = Post.objects.all().filter(published_date__lte=timezone.now()).order_by('-published_date')
-    max_date = dateformat.format(timezone.now(), 'Y-m-d')
-    min_date = dateformat.format(posts.last().published_date, 'Y-m-d')
-    archive_date = request.GET.get('archive_date')
+    value_date_max = max_date = dateformat.format(timezone.now(), 'Y-m-d')
+    value_date_min = min_date = dateformat.format(posts.last().published_date, 'Y-m-d')
+    archive_date_start = request.GET.get('archive_date_start')
+    archive_date_stop = request.GET.get('archive_date_stop')
+
+    if archive_date_start and archive_date_stop:
+        archive_date_start = datetime.strptime(archive_date_start, '%Y-%m-%d')
+        archive_date_stop = datetime.strptime(archive_date_stop, '%Y-%m-%d')
+        posts = Post.objects.all().filter(published_date__gte=archive_date_start,
+                                          published_date__lte=archive_date_stop).order_by('-published_date')
+        value_date_min = dateformat.format(archive_date_start, 'Y-m-d')
+        value_date_max = dateformat.format(archive_date_stop, 'Y-m-d')
+
+        #posts = Post.objects.all().filter(published_date__contains=archive_date_start).order_by('-published_date')
+
 
     if user_choise and user_choise != 'Все авторы':
         selected_author = User.objects.get(username=user_choise)
         posts = Post.objects.all().filter(author=selected_author).filter(published_date__lte=timezone.now())\
             .order_by('-published_date')
 
-    if archive_date:
-        posts = Post.objects.all().filter(published_date__contains=archive_date).order_by('-published_date')
-
     context = {'posts': posts,
                'authors': authors,
                'author': selected_author,
                'max_date': max_date,
                'min_date': min_date,
-               'archive_date': archive_date}
+               'archive_date_start': archive_date_start,
+               'archive_date_stop': archive_date_stop,
+               'value_date_min': value_date_min,
+               'value_date_max': value_date_max}
+
     return render(request, 'blog/post_list.html', context=context)
 
 def homework(request):
     name = request.GET.get('name')
     if name is None or name == '':
         name = 'John Doo'
-    print(name)
     type = request.GET.get('type')
     if type is None or type == '':
         type = 'Unknown'
@@ -78,17 +90,14 @@ def post(request):
             # post_comment.author = request.user
             post_comment.save()
             return HttpResponseRedirect('?id=% s' % post_id)
-        #new_comment = CommentForm()
     else:
         new_comment = CommentForm()
     context = {'id': post_id, 'selected_post': selected_post, 'comments': comments, 'new_comment': new_comment}
     return render(request, 'blog/post.html', context=context)
 
 
-# def view_404(request, exception):
-#     """
-#     Page not found Error 404
-#     """
-#     response = render('404.html', context=RequestContext(request))
-#     response.status_code = 404
-#     return response
+def view_404(request, exception):
+    """
+    Page not found Error 404
+    """
+    return render(request, 'blog/404.html')

@@ -20,14 +20,20 @@
     </div>
     <div class="col-md-8">
         <form action="{% url 'post_list' %}" method="get">
-            <label><b>Архив новостей на дату:</b></label>
-            <input type="date" name="archive_date"
-               value="{{ max_date }}"
+            <label><b>Архив статей:</b></label>
+            <input type="date" name="archive_date_start"
+               value="{{ value_date_min }}"
+               min="{{ min_date }}" max="{{ max_date }}">
+             -
+            <input type="date" name="archive_date_stop"
+               value="{{ value_date_max }}"
                min="{{ min_date }}" max="{{ max_date }}">
             <button type="submit" class="btn btn-primary">Найти</button>
-            {% if archive_date %}
+            {% if archive_date_start %}
                 {% if not posts %}
-            <p><i>К сожалению в этот день новостей не было. Попробуйте указать другую дату.</i></p>
+                    <br /><br />
+                    <p><i>К сожалению, в указанный вами период c {{ archive_date_start }} по
+                        {{ archive_date_stop }}, статей не найдено. Попробуйте указать другие даты.</i></p>
                 {% endif %}
                 <a href="{% url 'post_list' %}">Вернуться к списку статей</a>
             {% endif %}
