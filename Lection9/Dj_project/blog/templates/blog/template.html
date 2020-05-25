@@ -31,6 +31,24 @@
                     </div>
                 </div>
             </div>
+            {% block user %}
+            <div class="row">
+                <div class="col-md-12">
+                    {% if request.user.is_authenticated %}
+                        <form class="logout-link" method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <p><b>Вы вошли на сайт под пользователем: {{ request.user }}</b>
+                            <button type="submit" class="btn btn-primary">Выйти</button></p>
+                        </form>
+                    {% else %}
+                        <h5><a href="{% url 'login' %}">Войдите на сайт</a>
+                            или
+                            <a href="{% url 'registration' %}">зарегистрируйтесь</a>
+                        </h5>
+                    {% endif %}
+                </div>
+            </div>
+            {% endblock user %}
         </header>
 
         <article>

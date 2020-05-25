@@ -1,10 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, AnonymousUser
 from django.utils import timezone, dateformat
 from django.http import Http404, HttpResponseRedirect, HttpResponseNotFound, HttpResponse
 from datetime import datetime
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, logout
 from . models import Post, Comment
-from .forms import CommentForm
+from . forms import CommentForm, LoginForm
 
 
 def main_page(request):
@@ -29,7 +31,6 @@ def post_list(request):
                                           published_date__lte=archive_date_stop).order_by('-published_date')
         value_date_min = dateformat.format(archive_date_start, 'Y-m-d')
         value_date_max = dateformat.format(archive_date_stop, 'Y-m-d')
-
         #posts = Post.objects.all().filter(published_date__contains=archive_date_start).order_by('-published_date')
 
 
@@ -46,7 +47,8 @@ def post_list(request):
                'archive_date_start': archive_date_start,
                'archive_date_stop': archive_date_stop,
                'value_date_min': value_date_min,
-               'value_date_max': value_date_max}
+               'value_date_max': value_date_max,
+               }
 
     return render(request, 'blog/post_list.html', context=context)
 
@@ -102,3 +104,25 @@ def view_404(request, exception):
     Page not found Error 404
     """
     return render(request, 'blog/404.html')
+
+
+def login_view(request):
+    if request.method == 'POST':
+        user_form = AuthenticationForm(data=request.POST)
+        if user_form.is_valid():
+            user = user_form.get_user()
+            login(request, user)
+            return HttpResponseRedirect('/')
+    else:
+        user_form = AuthenticationForm()
+    return render(request, 'blog/login_form.html', context={'user_form': user_form})
+
+
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request)
+    return HttpResponseRedirect('/')
+
+
+def registration_view(request):
+    return HttpResponseRedirect('/')

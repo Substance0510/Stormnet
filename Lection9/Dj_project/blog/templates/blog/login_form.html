@@ -1,0 +1,12 @@
+{% extends 'blog/template.html' %}
+
+{% block header %}
+    <h1>Вход на сайт:</h1>
+{% endblock header %}
+{% block user %}
+    <form method="post">
+        {% csrf_token %}
+        {{ user_form }}
+        <button type="submit" class="btn btn-primary">Войти</button>
+    </form>
+{% endblock user %}
