@@ -1,6 +1,7 @@
 from django.urls import path, re_path
 from . import views
 
+#app_name = 'blog'
 handler404 = 'blog.views.view_404'
 
 urlpatterns = [
@@ -10,6 +11,6 @@ urlpatterns = [
     re_path(r'^ded/$', views.ded_moroz, name='ded_moroz'),
     path('post/', views.post, name='post'),
     path('logout/', views.logout_view, name='logout'),
-    path('login', views.login_view, name='login'),
-    path('registration', views.registration_view, name='registration')
+    path('login/', views.login_view, name='login'),
+    path('registration/', views.registration_view, name='registration')
 ]

@@ -125,4 +125,13 @@ def logout_view(request):
 
 
 def registration_view(request):
-    return HttpResponseRedirect('/')
+    if request.method == 'POST':
+        reg_form = UserCreationForm(request.POST)
+        if reg_form.is_valid():
+            user = reg_form.save()
+            login(request, user)
+            return HttpResponseRedirect('/')
+    else:
+        reg_form = UserCreationForm()
+    context = {'reg_form': reg_form}
+    return render(request, 'blog/registration.html', context=context)
