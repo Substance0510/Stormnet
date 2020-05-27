@@ -6,19 +6,18 @@
 {% block user %}
     <form method="post">
         {% csrf_token %}
-<!--        <label>Имя пользователя: </label>-->
-<!--        {{ reg_form.username }}-->
-<!--        <label>E-mail: </label>-->
-<!--        {{ reg_form.EmailField }}-->
-<!--        <label>Ваше имя:</label>-->
-<!--        {{ reg_form.firstname }}-->
-<!--        <label>Фамилия:</label>-->
-<!--        {{ reg_form.secondname }}-->
-<!--        <label>Введите пароль:</label>-->
-<!--        {{ reg_form.password1 }}-->
-<!--        <label>Подтвердите пароль: </label>-->
-<!--        {{ reg_form.password2 }}-->
-        {{ reg_form.as_p }}
+        {% for field in reg_form %}
+        <p>
+            {{ field.label_tag }}<br>
+            {{ field }}
+            {% if field.help_text %}
+              <small style="color: grey">{{ field.help_text }}</small>
+            {% endif %}
+            {% for error in field.errors %}
+            <p style="color: blue"><b>{{ error }}</b></p>
+            {% endfor %}
+        </p>
+        {% endfor %}
         <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
     </form>
 {% endblock user %}

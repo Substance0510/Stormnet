@@ -6,7 +6,7 @@ from datetime import datetime
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from . models import Post, Comment
-from . forms import CommentForm, LoginForm
+from . forms import CommentForm, SignUpForm
 
 
 def main_page(request):
@@ -126,12 +126,12 @@ def logout_view(request):
 
 def registration_view(request):
     if request.method == 'POST':
-        reg_form = UserCreationForm(request.POST)
+        reg_form = SignUpForm(request.POST)
         if reg_form.is_valid():
             user = reg_form.save()
             login(request, user)
             return HttpResponseRedirect('/')
     else:
-        reg_form = UserCreationForm()
+        reg_form = SignUpForm()
     context = {'reg_form': reg_form}
     return render(request, 'blog/registration.html', context=context)
