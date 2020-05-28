@@ -40,7 +40,7 @@ def post_list(request):
         posts = Post.objects.all().filter(author=selected_author).filter(published_date__lte=timezone.now())\
             .order_by('-published_date')
     # Pagination block:
-    paginator = Paginator(posts, 2)
+    paginator = Paginator(posts, 6)
     page = request.GET.get('page')
     try:
         pag_posts = paginator.page(page)
