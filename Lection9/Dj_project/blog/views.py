@@ -5,6 +5,7 @@ from django.http import Http404, HttpResponseRedirect, HttpResponseNotFound, Htt
 from datetime import datetime
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from . models import Post, Comment
 from . forms import CommentForm, SignUpForm
 
@@ -38,8 +39,19 @@ def post_list(request):
         selected_author = User.objects.get(username=user_choise)
         posts = Post.objects.all().filter(author=selected_author).filter(published_date__lte=timezone.now())\
             .order_by('-published_date')
+    # Pagination block:
+    paginator = Paginator(posts, 2)
+    page = request.GET.get('page')
+    try:
+        pag_posts = paginator.page(page)
+    except PageNotAnInteger:
+        # Если страница не является целым числом, поставим первую страницу
+        pag_posts = paginator.page(1)
+    except EmptyPage:
+        # Если страница больше максимальной, доставить последнюю страницу результатов
+        pag_posts = paginator.page(paginator.num_pages)
 
-    context = {'posts': posts,
+    context = {'posts': pag_posts,
                'authors': authors,
                'author': selected_author,
                'max_date': max_date,

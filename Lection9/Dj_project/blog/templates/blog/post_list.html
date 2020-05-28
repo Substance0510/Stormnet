@@ -53,4 +53,27 @@
     {% endfor %}
     <hr />
 </div>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <nav>
+            <span class="step-links">
+            {% if posts.has_previous %}
+                <a class="btn btn-primary" href="?page={{ posts.previous_page_number }}">
+                    <span class="glyphicon glyphicon-arrow-left"></span><< Предыдущая
+                </a>
+            {% endif %}
+            {% for page in posts.paginator.page_range %}
+                {% if page == posts.number %}
+                    <a class="current_page" href="?page={{ page }}"> {{ page }}</a>
+                {% else %}
+                    <a class="pages" href="?page={{ page }}"> {{ page }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if posts.has_next %}
+                <a class="btn btn-primary" href="?page={{ posts.next_page_number }}">Следующая >></a>
+            {% endif %}
+            </span>
+        </nav>
+    </div>
+</div>
 {% endblock articles %}
