@@ -19,15 +19,25 @@
     </div>
     <div class="comments">
         {% if not comments %}
-            <p>Комментариев к этой статье ещё нет. Будьте первым ;)</p>
+            <span>Комментариев к этой статье ещё нет. Будьте первым ;)</span>
         {% endif %}
         <div class="row">
             <div class="col-md-8">
-                <form method="post">
-                    {% csrf_token %}
-                    <label>Что вы об этом думаете?<br />{{ new_comment.text }}</label><br />
-                    <input type="submit" value="Отправить комментарий">
-                </form>
+                {% if request.user.is_authenticated %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <label>Что вы об этом думаете, {{ request.user }}?<br />{{ new_comment.text }}</label><br />
+                        <input type="submit" value="Отправить комментарий">
+                    </form>
+                {% else %}
+                    <div class="need_login">
+                        <span>
+                            Только зарегистрированные пользователи могут оставлять комментарии.<br />
+                            Пожалуйста, <a href="{% url 'login' %}">авторизуйетесь</a>
+                                или пройдите <a href="{% url 'registration' %}">регистрацию</a>. Это не долго ;)
+                        </span>
+                    </div>
+                {% endif %}
             </div>
         </div>
         {% if comments %}

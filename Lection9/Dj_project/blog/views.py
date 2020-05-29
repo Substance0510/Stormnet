@@ -37,13 +37,11 @@ def post_list(request):
         value_date_min = dateformat.format(archive_date_start, 'Y-m-d')
         value_date_max = dateformat.format(archive_date_stop, 'Y-m-d')
 
-        print(archive_date_start, archive_date_stop, posts)
-
     if user_choise and user_choise != 'Все авторы':
         selected_author = User.objects.get(username=user_choise)
         posts = posts.filter(author=selected_author).order_by('-published_date')
     else:
-        selected_author = 'Все авторы'
+        selected_author = None
 
     # Pagination block:
     paginator = Paginator(posts, 6)
@@ -59,7 +57,7 @@ def post_list(request):
 
     context = {'posts': pag_posts,
                'authors': authors,
-               'author': selected_author,
+               'selected_author': selected_author,
                'max_date': max_date,
                'min_date': min_date,
                'archive_date_start': archive_date_start,
@@ -108,8 +106,7 @@ def post(request):
         if new_comment.is_valid():
             post_comment = new_comment.save(commit=False)
             post_comment.page = selected_post
-            # post_comment.author = AnonymousUser()
-            # post_comment.author = request.user
+            post_comment.author = request.user
             post_comment.save()
             return HttpResponseRedirect('?id=% s' % post_id)
     else:

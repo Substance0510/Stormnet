@@ -58,13 +58,13 @@ padding: 100px; /* Поля вокруг текста */
 
 .comments {
 padding: 100px;
-font-size: 15px;
-color: gray;
 }
 
 .comments p {
 background-color: #fcc2e6;
 margin: 10px;
+font-size: 15px;
+color: gray;
 }
 
 .posts{
@@ -89,4 +89,10 @@ padding: 0px;
 
 .archive{
 margin-left: 15px;
+}
+
+.need_login{
+margin-top: 10px;
+border: 3px dashed gray;
+padding: 10px;
 }
