@@ -17,28 +17,34 @@ def main_page(request):
 def post_list(request):
     authors = User.objects.all().filter(is_staff=True)
     user_choise = request.GET.get('authors_filter')
-    selected_author = None
     posts = Post.objects.all().filter(published_date__lte=timezone.now()).order_by('-published_date')
     value_date_max = max_date = dateformat.format(timezone.now(), 'Y-m-d')
     value_date_min = min_date = dateformat.format(posts.last().published_date, 'Y-m-d')
     archive_date_start = request.GET.get('archive_date_start')
     archive_date_stop = request.GET.get('archive_date_stop')
+    get_params = request.GET
+
+    # Чтобы работали фильтры одновременно с пагинацией, нам нужно передавать строку фильтров в GET,
+    # при этом убирая параметр page из строки (.urlencode() - метод QuerySet для преобразования его в строку):
+    url_params = '&'.join(['%s=%s' % (k, v) for k, v in get_params.items() if k != 'page'])
+    url_params = '&' + url_params if url_params else url_params
 
     if archive_date_start and archive_date_stop:
         archive_date_start = datetime.strptime(archive_date_start, '%Y-%m-%d')
         archive_date_stop = datetime.strptime(archive_date_stop + ' 23:59:59', '%Y-%m-%d %H:%M:%S')
-        print(archive_date_stop)
-        posts = Post.objects.all().filter(published_date__gte=archive_date_start,
+        posts = posts.filter(published_date__gte=archive_date_start,
                                           published_date__lte=archive_date_stop).order_by('-published_date')
         value_date_min = dateformat.format(archive_date_start, 'Y-m-d')
         value_date_max = dateformat.format(archive_date_stop, 'Y-m-d')
-        #posts = Post.objects.all().filter(published_date__contains=archive_date_start).order_by('-published_date')
 
+        print(archive_date_start, archive_date_stop, posts)
 
     if user_choise and user_choise != 'Все авторы':
         selected_author = User.objects.get(username=user_choise)
-        posts = Post.objects.all().filter(author=selected_author).filter(published_date__lte=timezone.now())\
-            .order_by('-published_date')
+        posts = posts.filter(author=selected_author).order_by('-published_date')
+    else:
+        selected_author = 'Все авторы'
+
     # Pagination block:
     paginator = Paginator(posts, 6)
     page = request.GET.get('page')
@@ -60,6 +66,7 @@ def post_list(request):
                'archive_date_stop': archive_date_stop,
                'value_date_min': value_date_min,
                'value_date_max': value_date_max,
+               'url_params': url_params,
                }
 
     return render(request, 'blog/post_list.html', context=context)

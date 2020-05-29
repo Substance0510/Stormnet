@@ -82,3 +82,11 @@ font-size: 25px;
 color: white;
 background-color: blue;
 }
+
+.filters{
+padding: 0px;
+}
+
+.archive{
+margin-left: 15px;
+}

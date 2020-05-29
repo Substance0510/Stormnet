@@ -2,7 +2,6 @@
 
 {% block header %}
     <h1>Вход на сайт:</h1>
-{% endblock header %}
 {% block user %}
     <form method="post">
         {% csrf_token %}
@@ -10,3 +9,5 @@
         <button type="submit" class="btn btn-primary">Войти</button>
     </form>
 {% endblock user %}
+{% endblock header %}
+
