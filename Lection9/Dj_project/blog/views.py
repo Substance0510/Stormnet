@@ -38,8 +38,11 @@ def post_list(request):
         value_date_max = dateformat.format(archive_date_stop, 'Y-m-d')
 
     if user_choise and user_choise != 'Все авторы':
-        selected_author = User.objects.get(username=user_choise)
-        posts = posts.filter(author=selected_author).order_by('-published_date')
+        if User.objects.filter(username=user_choise).exists():
+            selected_author = User.objects.get(username=user_choise)
+            posts = posts.filter(author=selected_author).order_by('-published_date')
+        else:
+            selected_author = None
     else:
         selected_author = None
 
