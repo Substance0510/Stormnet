@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.auth.models import User, Group, AnonymousUser
 from django.utils import timezone, dateformat
 from django.http import Http404, HttpResponseRedirect, HttpResponseNotFound, HttpResponse
 from datetime import datetime
@@ -91,8 +91,7 @@ def ded_moroz(request):
     return render(request, 'blog/ded_moroz.html')
 
 
-def post(request):
-    post_id = request.GET.get('id')
+def post(request, post_id):
     if not Post.objects.filter(pk=post_id).exists():
         raise Http404
     selected_post = Post.objects.get(pk=post_id)
@@ -108,7 +107,7 @@ def post(request):
             post_comment.page = selected_post
             post_comment.author = request.user
             post_comment.save()
-            return HttpResponseRedirect('?id=% s' % post_id)
+            return HttpResponseRedirect(post_id)
     else:
         new_comment = CommentForm()
     context = {'id': post_id, 'selected_post': selected_post, 'comments': comments, 'new_comment': new_comment}
@@ -123,30 +122,35 @@ def view_404(request, exception):
 
 
 def login_view(request):
+    redirect_to = request.GET.get('next')
     if request.method == 'POST':
         user_form = AuthenticationForm(data=request.POST)
         if user_form.is_valid():
             user = user_form.get_user()
             login(request, user)
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect(redirect_to)
     else:
         user_form = AuthenticationForm()
     return render(request, 'blog/login_form.html', context={'user_form': user_form})
 
 
 def logout_view(request):
+    redirect_to = request.GET.get('next')
     if request.method == 'POST':
         logout(request)
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect(redirect_to)
 
 
 def registration_view(request):
+    redirect_to = request.GET.get('next')
     if request.method == 'POST':
         reg_form = SignUpForm(request.POST)
         if reg_form.is_valid():
             user = reg_form.save()
+            default_group = Group.objects.get(name='user_group')
+            default_group.user_set.add(user)
             login(request, user)
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect(redirect_to)
     else:
         reg_form = SignUpForm()
     context = {'reg_form': reg_form}

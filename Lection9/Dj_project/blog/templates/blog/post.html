@@ -22,7 +22,7 @@
             <span>Комментариев к этой статье ещё нет. Будьте первым ;)</span>
         {% endif %}
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-8 comment_field">
                 {% if request.user.is_authenticated %}
                     <form method="post">
                         {% csrf_token %}
@@ -33,8 +33,8 @@
                     <div class="need_login">
                         <span>
                             Только зарегистрированные пользователи могут оставлять комментарии.<br />
-                            Пожалуйста, <a href="{% url 'login' %}">авторизуйетесь</a>
-                                или пройдите <a href="{% url 'registration' %}">регистрацию</a>. Это не долго ;)
+                            Пожалуйста, <a href="{% url 'login' %}?next={{ request.path }}">авторизуйетесь</a>
+                                или пройдите <a href="{% url 'registration' %}?next={{ request.path }}">регистрацию</a>. Это не долго ;)
                         </span>
                     </div>
                 {% endif %}

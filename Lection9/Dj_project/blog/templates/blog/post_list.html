@@ -51,10 +51,10 @@
         <div class="col-md-3 posts">
             <hr />
             <p>Дата публикации: {{ post.published_date }}</p>
-            <h2><a href="{% url 'post' %}?id={{ post.pk }}">{{ post.title }}</a></h2>
+            <h2><a href="{% url 'post' post.pk %}">{{ post.title }}</a></h2>
             <label>Автор: {{ post.author }}</label>
             <p>{{ post.text|linebreaksbr|truncatechars:200 }}</p>
-            <a href="{% url 'post' %}?id={{ post.pk }}">Читать полностью...</a>
+            <a href="{% url 'post' post.pk %}">Читать полностью...</a>
         </div>
     {% endfor %}
     <hr />
