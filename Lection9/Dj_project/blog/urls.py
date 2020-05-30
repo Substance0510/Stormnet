@@ -1,9 +1,6 @@
 from django.urls import path, re_path
 from . import views
 
-#app_name = 'blog'
-handler404 = 'blog.views.view_404'
-
 urlpatterns = [
     path('', views.main_page, name='main_page'),
     path('blog/', views.post_list, name='post_list'),
