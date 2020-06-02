@@ -37,14 +37,11 @@ def post_list(request):
         value_date_min = dateformat.format(archive_date_start, 'Y-m-d')
         value_date_max = dateformat.format(archive_date_stop, 'Y-m-d')
 
+    selected_author = None
     if user_choise and user_choise != 'Все авторы':
         if User.objects.filter(username=user_choise).exists():
             selected_author = User.objects.get(username=user_choise)
             posts = posts.filter(author=selected_author).order_by('-published_date')
-        else:
-            selected_author = None
-    else:
-        selected_author = None
 
     # Pagination block:
     paginator = Paginator(posts, 6)

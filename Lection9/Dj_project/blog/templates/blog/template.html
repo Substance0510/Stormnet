@@ -18,7 +18,7 @@
     <div class="container-fluid">
         <header>
             <div class="row">
-                <div class="col-md-10">
+                <div class="col-md-10 xm-md-auto">
                     {% block header %}
                     {% block user %}
                         <div class="row">
@@ -41,11 +41,11 @@
                     {% endblock user %}
                     {% endblock header %}
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2 xm-md-auto">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-12 col-sm-offset-1">
                             <a href="{% url 'main_page' %}"><img src="{% static  'images/small_logo.png' %}"
-                                                                                   alt="logo" class="rightpic"></a>
+                                                                 alt="logo" class="rightpic img-fluid"></a>
                         </div>
                     </div>
                 </div>
