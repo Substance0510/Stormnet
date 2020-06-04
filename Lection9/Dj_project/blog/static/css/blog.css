@@ -44,16 +44,15 @@ float: right; /* Выравнивание по правому краю */
 width: 100%; */
 }
 
-ol.navigation_bar {
-margin: 0; /* Обнуляем значение отступов */
-padding: 4px; /* Значение полей */
-}
-
-ol.navigation_bar li {
+.navigation_bar a {
 display: inline; /* Отображать как строчный элемент */
 /* margin-right: 50px; /* Отступ слева */
 /* border: 1px solid #000; /* Рамка вокруг текста */
-padding: 100px; /* Поля вокруг текста */
+padding: 100px;
+}
+
+@media (max-width: 1300px){
+.navigation_bar a {padding: 10px;}
 }
 
 .comments {
@@ -67,10 +66,18 @@ font-size: 15px;
 color: gray;
 }
 
-.posts{
+.posts {
 margin: 15px;
 margin-left: 70px;
 background-color: #fcc2e6;
+}
+
+@media (max-width: 576px){
+.posts {
+margin: 15px;
+margin-left: 0px;
+background-color: #fcc2e6;
+    }
 }
 
 .step-links{
