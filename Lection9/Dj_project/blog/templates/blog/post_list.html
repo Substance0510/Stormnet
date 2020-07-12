@@ -44,6 +44,25 @@
             {% endif %}
             <button type="submit" class="btn btn-primary archive">Отфильтровать</button>
         </form>
+        <p>
+            <form class="search" action="{% url 'post_list' %}" method="get">
+                <label for="search_textarea"><b>Поиск по статьям:</b></label>
+                <textarea id="search_textarea" rows="1" cols="44" name="search" placeholder="Введите текст для поиска. Не более 50 символов." required maxlength="50"></textarea>
+                <label> Искать в:
+                    <input type="checkbox" name="search_in_headers" value="True"> заголовках
+                    <input type="checkbox" name="search_in_body" value="True"> тексте
+                </label>
+                <button type="submit" class="btn btn-primary search">Поиск</button>
+            </form>
+            {% if search_text %}
+                {% if not posts %}
+                    <br /><br />
+                    <p><i>К сожалению, данный текст: {{ search_text }} не был найден. Попробуйте изменить
+                    параметры поиска или регистр текста.</i></p>
+                {% endif %}
+                <a class="btn btn-primary" href="{% url 'post_list' %}">Вернуться к списку статей</a>
+            {% endif %}
+        </p>
     </div>
 </div>
 <div class="row">

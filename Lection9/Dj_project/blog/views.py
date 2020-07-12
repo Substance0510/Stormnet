@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, Group, AnonymousUser
 from django.utils import timezone, dateformat
 from django.http import Http404, HttpResponseRedirect, HttpResponseNotFound, HttpResponse
+from django.db.models import Q
 from datetime import datetime
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
@@ -29,6 +30,7 @@ def post_list(request):
     url_params = '&'.join(['%s=%s' % (k, v) for k, v in get_params.items() if k != 'page'])
     url_params = '&' + url_params if url_params else url_params
 
+    # Filter block
     if archive_date_start and archive_date_stop:
         archive_date_start = datetime.strptime(archive_date_start, '%Y-%m-%d')
         archive_date_stop = datetime.strptime(archive_date_stop + ' 23:59:59', '%Y-%m-%d %H:%M:%S')
@@ -42,6 +44,24 @@ def post_list(request):
         if User.objects.filter(username=user_choise).exists():
             selected_author = User.objects.get(username=user_choise)
             posts = posts.filter(author=selected_author).order_by('-published_date')
+
+    # Search block
+    search_text = request.GET.get('search')
+    search_header = request.GET.get('search_in_headers')
+    search_body = request.GET.get('search_in_body')
+    if search_text:
+        if search_header:
+            if search_body:
+                posts = posts.filter(Q(title__icontains=search_text) | Q(text__icontains=search_text)).order_by(
+                    '-published_date')
+            else:
+                posts = posts.filter(Q(title__icontains=search_text)).order_by('-published_date')
+        else:
+            if search_body:
+                posts = posts.filter(Q(text__icontains=search_text)).order_by('-published_date')
+            else:
+                posts = posts.filter(Q(title__icontains=search_text) | Q(text__icontains=search_text)).order_by(
+                    '-published_date')
 
     # Pagination block:
     paginator = Paginator(posts, 6)
@@ -65,9 +85,11 @@ def post_list(request):
                'value_date_min': value_date_min,
                'value_date_max': value_date_max,
                'url_params': url_params,
+               'search_text': search_text,
                }
 
     return render(request, 'blog/post_list.html', context=context)
+
 
 def homework(request):
     name = request.GET.get('name')

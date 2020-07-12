@@ -107,3 +107,11 @@ padding: 10px;
 .comment_field{
 margin-top: 10px;
 }
+
+.search textarea {
+	resize: none;
+}
+
+.search * {
+  vertical-align: middle;
+}
