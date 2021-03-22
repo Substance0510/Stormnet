@@ -7,6 +7,7 @@ from datetime import datetime
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.urls import reverse
 from . models import Post, Comment
 from . forms import CommentForm, SignUpForm
 
@@ -129,7 +130,7 @@ def post(request, post_id):
             post_comment.page = selected_post
             post_comment.author = request.user
             post_comment.save()
-            return HttpResponseRedirect(post_id)
+            return HttpResponseRedirect(reverse('post', args=(post_id, )))
     else:
         new_comment = CommentForm()
     context = {'id': post_id, 'selected_post': selected_post, 'comments': comments, 'new_comment': new_comment}
